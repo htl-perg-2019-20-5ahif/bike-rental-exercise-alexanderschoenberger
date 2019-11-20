@@ -43,7 +43,7 @@ namespace bike_rental_API.Controllers
             if (customer.Birthday != null)
                 c.Birthday = customer.Birthday;
             if (customer.FirstName != null)
-                c.FirstName = c.FirstName;
+                c.FirstName = customer.FirstName;
             if (customer.HouseNumber != null)
                 c.HouseNumber = customer.HouseNumber;
             if (customer.LastName != null)
@@ -100,7 +100,20 @@ namespace bike_rental_API.Controllers
         public async Task<Bike> UpdateBike(Bike bike)
         {
             Bike b = rentalDBContext.Bikes.Find(bike.ID);
-            b = bike;
+            rentalDBContext.Bikes.Remove(b);
+            if (bike.Brand != null)
+                b.Brand = bike.Brand;
+            if (bike.DateOfLastService != null)
+                b.DateOfLastService = bike.DateOfLastService;
+            if (bike.Notes != null)
+                b.Notes = bike.Notes;
+            if (bike.PurchaseDate != null)
+                b.PurchaseDate = bike.PurchaseDate;
+            if (bike.RentalPriceForAdditionalHour != 0)
+                b.RentalPriceForAdditionalHour = bike.RentalPriceForAdditionalHour;
+            if (bike.RentalPriceForFirstHour != 0)
+                b.RentalPriceForFirstHour = bike.RentalPriceForFirstHour;
+            rentalDBContext.Bikes.Add(b);
             await rentalDBContext.SaveChangesAsync();
             return bike;
         }
