@@ -58,10 +58,10 @@ namespace bike_rental_API.Controllers
 
         [HttpGet]
         [Route("/customer/{id}/getAlRental")]
-        public Rental GetAllRentalCustomer(int id)
+        public IEnumerable<Rental> GetAllRentalCustomer(int id)
         {
             Customer c = rentalDBContext.Customers.Find(id);
-            return rentalDBContext.Rentals.First((Rental r) => r.Customer.ID == id);
+            return rentalDBContext.Rentals.Where((Rental r) => r.Customer.ID == id);
         }
 
         [HttpGet]
