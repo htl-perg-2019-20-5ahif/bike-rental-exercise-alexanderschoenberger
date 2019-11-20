@@ -39,7 +39,22 @@ namespace bike_rental_API.Controllers
         public async Task<Customer> UpdateCustomer(Customer customer)
         {
             Customer c = rentalDBContext.Customers.Find(customer.ID);
-            c = customer;
+            rentalDBContext.Customers.Remove(c);
+            if (customer.Birthday != null)
+                c.Birthday = customer.Birthday;
+            if (customer.FirstName != null)
+                c.FirstName = c.FirstName;
+            if (customer.HouseNumber != null)
+                c.HouseNumber = customer.HouseNumber;
+            if (customer.LastName != null)
+                c.LastName = customer.LastName;
+            if (customer.Street != null)
+                c.Street = customer.Street;
+            if (customer.Town != null)
+                c.Town = customer.Town;
+            if (customer.ZipCode != null)
+                c.ZipCode = customer.ZipCode;
+            rentalDBContext.Customers.Add(c);
             await rentalDBContext.SaveChangesAsync();
             return customer;
         }
@@ -96,7 +111,8 @@ namespace bike_rental_API.Controllers
         public async Task<ActionResult> DeleteBike(int id)
         {
             Bike b = rentalDBContext.Bikes.Find(id);
-            if (rentalDBContext.Bikes.Count((Bike b) => b.ID == id) >= 1) {
+            if (rentalDBContext.Bikes.Count((Bike b) => b.ID == id) >= 1)
+            {
                 return BadRequest();
             }
             rentalDBContext.Bikes.Remove(b);
@@ -113,7 +129,7 @@ namespace bike_rental_API.Controllers
 
             rental.RentalBegin = System.DateTime.Now;
             rental.RentalEnd = DateTime.MaxValue;
-            if(rentalDBContext.Rentals.Count((Rental r)=>r.CustomerId == rental.CustomerId && r.RentalBegin == DateTime.MaxValue) > 0)
+            if (rentalDBContext.Rentals.Count((Rental r) => r.CustomerId == rental.CustomerId && r.RentalBegin == DateTime.MaxValue) > 0)
             {
                 return BadRequest();
             }
