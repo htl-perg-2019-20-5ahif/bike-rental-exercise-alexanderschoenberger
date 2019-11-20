@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <RootNamespace>bike_rental_API</RootNamespace>
+    <UserSecretsId>95c4098c-8c3f-4857-89e9-e715f68459b9</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

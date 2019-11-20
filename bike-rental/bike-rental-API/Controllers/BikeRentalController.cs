@@ -13,9 +13,9 @@ namespace bike_rental_API.Controllers
     {
         private RentalDBContext rentalDBContext;
 
-        public BikeRentalController()
+        public BikeRentalController(RentalDBContext rentalDbContext)
         {
-            rentalDBContext = new RentalDBContext();
+            rentalDBContext = rentalDbContext;
         }
 
         [HttpGet]

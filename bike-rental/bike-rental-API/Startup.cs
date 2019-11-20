@@ -27,8 +27,7 @@ namespace bike_rental_API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            /*services.AddDbContext<RentalDBContext>(options => options.UseSqlServer(
-            "Server=localhost;Database=CookieRecipes;User Id=sa;Password=Hallo@SQLServer;"));*/
+            services.AddDbContext<RentalDBContext>(options => options.UseSqlServer(Configuration["ConnectionString"]));
             services.AddSwaggerGen(o =>
             {
                 o.SwaggerDoc(
@@ -38,26 +37,26 @@ namespace bike_rental_API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-            public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
             {
-                if (env.IsDevelopment())
-                {
-                    app.UseDeveloperExceptionPage();
-                }
-
-                app.UseRouting();
-
-                app.UseAuthorization();
-
-                app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapControllers();
-                });
-                app.UseSwagger();
-                app.UseSwaggerUI(o =>
-                {
-                    o.SwaggerEndpoint("/swagger/v1/swagger.json", "API");
-                });
+                app.UseDeveloperExceptionPage();
             }
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+            app.UseSwagger();
+            app.UseSwaggerUI(o =>
+            {
+                o.SwaggerEndpoint("/swagger/v1/swagger.json", "API");
+            });
         }
     }
+}
