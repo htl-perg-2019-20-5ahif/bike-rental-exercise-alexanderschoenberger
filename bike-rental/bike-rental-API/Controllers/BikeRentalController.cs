@@ -51,6 +51,7 @@ namespace bike_rental_API.Controllers
         {
             Customer c = rentalDBContext.Customers.Find(id);
             rentalDBContext.Customers.Remove(c);
+            rentalDBContext.Rentals.ToList().RemoveAll((Rental r) => r.Customer.ID == c.ID);
             await rentalDBContext.SaveChangesAsync();
             return c;
         }
@@ -92,25 +93,33 @@ namespace bike_rental_API.Controllers
 
         [HttpDelete]
         [Route("/bike/{id}")]
-        public async Task<Bike> DeleteBike(int id)
+        public async Task<ActionResult> DeleteBike(int id)
         {
             Bike b = rentalDBContext.Bikes.Find(id);
+            if (rentalDBContext.Bikes.Count((Bike b) => b.ID == id) >= 1) {
+                return BadRequest();
+            }
             rentalDBContext.Bikes.Remove(b);
             await rentalDBContext.SaveChangesAsync();
-            return b;
+            return NoContent();
         }
 
         [HttpPost]
         [Route("/rental")]
-        public async Task<Rental> StartRental(Rental rental)
+        public async Task<ActionResult> StartRental(Rental rental)
         {
             rental.Customer = await rentalDBContext.Customers.FindAsync(rental.CustomerId);
             rental.Bike = await rentalDBContext.Bikes.FindAsync(rental.BikeId);
 
             rental.RentalBegin = System.DateTime.Now;
+            rental.RentalEnd = DateTime.MaxValue;
+            if(rentalDBContext.Rentals.Count((Rental r)=>r.CustomerId == rental.CustomerId && r.RentalBegin == DateTime.MaxValue) > 0)
+            {
+                return BadRequest();
+            }
             rentalDBContext.Rentals.Add(rental);
             await rentalDBContext.SaveChangesAsync();
-            return rental;
+            return Ok(rental);
         }
 
         [HttpPut]
@@ -125,7 +134,7 @@ namespace bike_rental_API.Controllers
             await rentalDBContext.SaveChangesAsync();
             return r;
         }
-        
+
 
         [HttpGet]
         [Route("/rental/{id}")]
